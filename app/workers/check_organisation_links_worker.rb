@@ -26,6 +26,6 @@ private
   end
 
   def callback
-    Whitehall::UrlMaker.new(host: Plek.find('whitehall-admin')).admin_link_checker_api_callback_url
+    Whitehall::UrlMaker.new(host: Plek.new.external_url_for('whitehall-admin')).admin_link_checker_api_callback_url
   end
 end

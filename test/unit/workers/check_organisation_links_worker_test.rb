@@ -152,7 +152,7 @@ private
 
     {
       uris: uris,
-      webhook_uri: admin_link_checker_api_callback_url(host: Plek.find('whitehall-admin')),
+      webhook_uri: admin_link_checker_api_callback_url(host: Plek.new.external_url_for('whitehall-admin')),
       webhook_secret_token: Rails.application.secrets.link_checker_api_secret_token
     }
   end
