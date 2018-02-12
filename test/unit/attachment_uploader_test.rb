@@ -154,7 +154,7 @@ class AttachmentUploaderTest < ActiveSupport::TestCase
     uploader = AttachmentUploader.new(stub('AR Model', id: 1), 'mounted-as')
     uploader.store!(fixture_file_upload('simple.pdf'))
     expected_path = '/government/uploads/system/uploads/mocha/mock/mounted-as/1/simple.pdf'
-    assert_equal expected_path, uploader.file.asset_manager_path
+    assert_equal expected_path, uploader.file.path
   end
 
   def required_arcgis_file_list
