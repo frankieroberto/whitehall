@@ -1,6 +1,7 @@
 class Whitehall::AssetManagerStorage < CarrierWave::Storage::Abstract
   def store!(file)
     original_file = file.to_file
+    original_file_size = original_file.size
     temporary_location = ::File.join(
       Whitehall.asset_manager_tmp_dir,
       SecureRandom.uuid,
@@ -12,7 +13,7 @@ class Whitehall::AssetManagerStorage < CarrierWave::Storage::Abstract
     legacy_url_path = ::File.join('/government/uploads', uploader.store_path)
     draft = uploader.assets_protected?
     AssetManagerCreateWhitehallAssetWorker.perform_async(temporary_location, legacy_url_path, draft)
-    File.new(uploader.store_path)
+    File.new(uploader.store_path, original_file_size)
   end
 
   def retrieve!(identifier)
@@ -21,8 +22,11 @@ class Whitehall::AssetManagerStorage < CarrierWave::Storage::Abstract
   end
 
   class File
-    def initialize(asset_path)
+    attr_reader :size
+
+    def initialize(asset_path, size = nil)
       @legacy_url_path = ::File.join('/government', 'uploads', asset_path)
+      @size = size
     end
 
     def delete
