@@ -24,7 +24,7 @@ class Whitehall::AssetManagerStorage < CarrierWave::Storage::Abstract
   class File
     attr_reader :size
 
-    def initialize(asset_path, size = nil)
+    def initialize(asset_path, size = 10)
       @legacy_url_path = ::File.join('/government', 'uploads', asset_path)
       @size = size
     end
