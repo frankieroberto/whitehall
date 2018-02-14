@@ -227,4 +227,40 @@ class AttachmentDataTest < ActiveSupport::TestCase
     assert_equal replacer, to_be_replaced.replaced_by
     assert_equal replacer, replaced.reload.replaced_by
   end
+
+  test "#attachable returns nil if there aren't any attachments" do
+    attachment_data = FactoryBot.build(:attachment_data)
+
+    assert_nil attachment_data.attachable
+  end
+
+  test '#attachable returns the attachable object associated with the last attachment' do
+    consultation = FactoryBot.build(:consultation)
+    attachment = FactoryBot.build(:file_attachment, attachable: consultation)
+    attachment_data = FactoryBot.build(:attachment_data, attachments: [attachment])
+
+    assert_equal consultation, attachment_data.attachable
+  end
+
+  test "#attachable_is_access_limited? returns nil if there's no associated attachable object" do
+    attachment_data = FactoryBot.build(:attachment_data)
+
+    assert_nil attachment_data.attachable_is_access_limited?
+  end
+
+  test "#attachable_is_access_limited? delegates to the associated attachable object" do
+    attachment_data = FactoryBot.build(:attachment_data)
+    attachable = stub('attachable', access_limited?: 'access-limited')
+    attachment_data.stubs(:attachable).returns(attachable)
+
+    assert_equal 'access-limited', attachment_data.attachable_is_access_limited?
+  end
+
+  test '#access_limited_object delegates to the associated attachable object' do
+    attachment_data = FactoryBot.build(:attachment_data)
+    attachable = stub('attachable', access_limited_object: 'access-limited-object')
+    attachment_data.stubs(:attachable).returns(attachable)
+
+    assert_equal 'access-limited-object', attachment_data.access_limited_object
+  end
 end
